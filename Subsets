@@ -1,0 +1,11 @@
+class Solution(object):
+    def subsets(self, nums):
+        output=[[]]
+        for i in nums:
+            temp_output=[]
+            for j in output:
+                temp_output.append(j+[i])
+            output.extend(temp_output)
+        return output
+       
+        
