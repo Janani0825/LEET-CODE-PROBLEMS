@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int shortestSubarray(int* nums, int numsSize, int k) {
+    long long* P = (long long*)malloc((numsSize + 1) * sizeof(long long));
+    P[0] = 0;
+    for (int i = 0; i < numsSize; i++) {
+        P[i + 1] = P[i] + nums[i];
+    }
+
+    int* deque = (int*)malloc((numsSize + 1) * sizeof(int));
+    int head = 0;
+    int tail = 0;
+    int minLen = numsSize + 1;
+
+    for (int i = 0; i <= numsSize; i++) {
+        while (tail > head && P[i] - P[deque[head]] >= k) {
+            int len = i - deque[head];
+            if (len < minLen) {
+                minLen = len;
+            }
+            head++;
+        }
+
+        while (tail > head && P[i] <= P[deque[tail - 1]]) {
+            tail--;
+        }
+
+        deque[tail++] = i;
+    }
+
+    free(P);
+    free(deque);
+
+    return (minLen <= numsSize) ? minLen : -1;
+}
