@@ -1,0 +1,26 @@
+import java.util.Arrays;
+
+public class Solution {
+    public int minOperations(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int uniqueCount = 1;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[uniqueCount] = nums[i];
+                uniqueCount++;
+            }
+        }
+        int minOps = n;
+        int right = 0;
+        for (int left = 0; left < uniqueCount; left++) {
+            while (right < uniqueCount && nums[right] < nums[left] + n) {
+                right++;
+            }
+            int validElements = right - left;
+            minOps = Math.min(minOps, n - validElements);
+        }
+        
+        return minOps;
+    }
+}
