@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int minKBitFlips(int* nums, int numsSize, int k) {
+    int* diff = (int*)calloc(numsSize + 1, sizeof(int));
+    int ans = 0;
+    int revCnt = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        revCnt += diff[i];
+        
+        if ((nums[i] + revCnt) % 2 == 0) {
+            if (i + k > numsSize) {
+                free(diff);
+                return -1;
+            }
+            ans++;
+            revCnt++;
+            diff[i + k]--;
+        }
+    }
+
+    free(diff);
+    return ans;
+}
