@@ -1,0 +1,36 @@
+import java.util.Stack;
+import java.util.Arrays;
+
+public class Solution {
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        if (n == 0) return 0;
+        boolean[] isValid = new boolean[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            
+            if (ch == '(') {
+                stack.push(i); 
+            } else {
+                if (!stack.isEmpty()) {
+                  
+                    int openIndex = stack.pop();
+                    isValid[openIndex] = true;
+                    isValid[i] = true;
+                }
+            }
+        }
+        int maxLength = 0;
+        int currentLength = 0;
+        for (boolean match : isValid) {
+            if (match) {
+                currentLength++;
+                maxLength = Math.max(maxLength, currentLength);
+            } else {
+                currentLength = 0; 
+            }
+        }
+        return maxLength;
+    }
+}
