@@ -1,0 +1,30 @@
+import java.util.Arrays;
+
+class Solution {
+    public int[] numMovesStonesII(int[] stones) {
+        Arrays.sort(stones);
+        int n = stones.length;
+        
+        int maxEdgeGap = Math.max(stones[n - 1] - stones[1], stones[n - 2] - stones[0]);
+        int maxMoves = maxEdgeGap - n + 2;
+        
+        int minMoves = n; 
+        int left = 0;
+        
+        for (int right = 0; right < n; right++) {
+            while (stones[right] - stones[left] >= n) {
+                left++;
+            }
+            
+            int currentStones = right - left + 1;
+            
+            if (currentStones == n - 1 && stones[right] - stones[left] == n - 2) {
+                minMoves = Math.min(minMoves, 2);
+            } else {
+                minMoves = Math.min(minMoves, n - currentStones);
+            }
+        }
+        
+        return new int[]{minMoves, maxMoves};
+    }
+}
