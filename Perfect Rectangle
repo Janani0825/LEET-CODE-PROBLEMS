@@ -1,0 +1,46 @@
+import java.util.HashSet;
+
+class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        
+        long totalArea = 0;
+        HashSet<String> corners = new HashSet<>();
+        
+        for (int[] rect : rectangles) {
+            int x1 = rect[0], y1 = rect[1];
+            int x2 = rect[2], y2 = rect[3];
+            minX = Math.min(minX, x1);
+            minY = Math.min(minY, y1);
+            maxX = Math.max(maxX, x2);
+            maxY = Math.max(maxY, y2);
+            totalArea += (long)(x2 - x1) * (y2 - y1);
+            String c1 = x1 + "," + y1;
+            String c2 = x1 + "," + y2;
+            String c3 = x2 + "," + y1;
+            String c4 = x2 + "," + y2;
+            if (!corners.add(c1)) corners.remove(c1);
+            if (!corners.add(c2)) corners.remove(c2);
+            if (!corners.add(c3)) corners.remove(c3);
+            if (!corners.add(c4)) corners.remove(c4);
+        }
+        long expectedArea = (long)(maxX - minX) * (maxY - minY);
+        if (totalArea != expectedArea) {
+            return false;
+        }
+        if (corners.size() != 4) {
+            return false;
+        }
+        if (!corners.contains(minX + "," + minY) ||
+            !corners.contains(minX + "," + maxY) ||
+            !corners.contains(maxX + "," + minY) ||
+            !corners.contains(maxX + "," + maxY)) {
+            return false;
+        }
+        
+        return true;
+    }
+}
