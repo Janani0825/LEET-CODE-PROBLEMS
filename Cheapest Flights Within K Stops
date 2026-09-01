@@ -1,0 +1,35 @@
+int findCheapestPrice(int n, int** flights,
+                      int flightsSize, int* flightsColSize,
+                      int src, int dst, int k) {
+
+    int INF = 1000000000;
+    int dist[101];
+    for (int i = 0; i < n; i++)
+        dist[i] = INF;
+    dist[src] = 0;
+    for (int step = 0; step <= k; step++) {
+
+        int temp[101];
+        for (int i = 0; i < n; i++)
+            temp[i] = dist[i];
+        for (int i = 0; i < flightsSize; i++) {
+
+            int from = flights[i][0];
+            int to = flights[i][1];
+            int price = flights[i][2];
+
+            if (dist[from] != INF &&
+                temp[to] > dist[from] + price) {
+
+                temp[to] = dist[from] + price;
+            }
+        }
+        for (int i = 0; i < n; i++)
+            dist[i] = temp[i];
+    }
+
+    if (dist[dst] == INF)
+        return -1;
+
+    return dist[dst];
+}
