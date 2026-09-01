@@ -1,0 +1,94 @@
+int numBusesToDestination(int** routes, int routesSize,
+                          int* routesColSize, int source, int target) {
+
+    if (source == target)
+        return 0;
+    int MAX = 1000000;
+    int *head = malloc(MAX * sizeof(int));
+
+    for (int i = 0; i < MAX; i++)
+        head[i] = -1;
+    int *bus = malloc(100000 * sizeof(int));
+    int *next = malloc(100000 * sizeof(int));
+
+    int edge = 0;
+
+    /* Build stop -> buses graph */
+    for (int i = 0; i < routesSize; i++) {
+
+        for (int j = 0; j < routesColSize[i]; j++) {
+
+            int stop = routes[i][j];
+
+            bus[edge] = i;
+            next[edge] = head[stop];
+            head[stop] = edge;
+
+            edge++;
+        }
+    }
+    int *queue = malloc(MAX * sizeof(int));
+
+    int front = 0;
+    int rear = 0;
+
+    int *visitedStop = calloc(MAX, sizeof(int));
+    int visitedBus[500] = {0};
+
+    queue[rear++] = source;
+    visitedStop[source] = 1;
+
+    int answer = 0;
+
+    while (front < rear) {
+
+        int size = rear - front;
+        answer++;
+
+        while (size--) {
+
+            int stop = queue[front++];
+            int e = head[stop];
+
+            while (e != -1) {
+
+                int b = bus[e];
+
+                if (!visitedBus[b]) {
+
+                    visitedBus[b] = 1;
+                    for (int j = 0; j < routesColSize[b]; j++) {
+
+                        int nextStop = routes[b][j];
+
+                        if (nextStop == target) {
+                            free(head);
+                            free(bus);
+                            free(next);
+                            free(queue);
+                            free(visitedStop);
+
+                            return answer;
+                        }
+
+                        if (!visitedStop[nextStop]) {
+
+                            visitedStop[nextStop] = 1;
+                            queue[rear++] = nextStop;
+                        }
+                    }
+                }
+
+                e = next[e];
+            }
+        }
+    }
+
+    free(head);
+    free(bus);
+    free(next);
+    free(queue);
+    free(visitedStop);
+
+    return -1;
+}
