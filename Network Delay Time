@@ -1,0 +1,66 @@
+int networkDelayTime(int** times, int timesSize,
+                     int* timesColSize, int n, int k) {
+
+    int dist[101];
+    int visited[101] = {0};
+
+    int INF = 1000000000;
+
+    // Initially all distances are infinity
+    for (int i = 1; i <= n; i++)
+        dist[i] = INF;
+
+    // Starting node
+    dist[k] = 0;
+
+    // Dijkstra
+    for (int count = 0; count < n; count++) {
+
+        int u = -1;
+
+        // Find nearest unvisited node
+        for (int i = 1; i <= n; i++) {
+
+            if (!visited[i] &&
+                (u == -1 || dist[i] < dist[u])) {
+
+                u = i;
+            }
+        }
+
+        // No reachable node
+        if (u == -1 || dist[u] == INF)
+            break;
+
+        visited[u] = 1;
+
+        // Check all edges
+        for (int i = 0; i < timesSize; i++) {
+
+            int from = times[i][0];
+            int to = times[i][1];
+            int time = times[i][2];
+
+            if (from == u) {
+
+                if (dist[to] > dist[u] + time) {
+                    dist[to] = dist[u] + time;
+                }
+            }
+        }
+    }
+
+    // Find maximum distance
+    int answer = 0;
+
+    for (int i = 1; i <= n; i++) {
+
+        if (dist[i] == INF)
+            return -1;
+
+        if (dist[i] > answer)
+            answer = dist[i];
+    }
+
+    return answer;
+}
