@@ -1,0 +1,61 @@
+int minimumEffortPath(int** heights, int heightsSize,
+                      int* heightsColSize) {
+
+    int rows = heightsSize;
+    int cols = heightsColSize[0];
+
+    int total = rows * cols;
+    int INF = 1000000000;
+
+    int dist[10000];
+    int visited[10000] = {0};
+    for (int i = 0; i < total; i++)
+        dist[i] = INF;
+    dist[0] = 0;
+
+    int dr[] = {-1, 1, 0, 0};
+    int dc[] = {0, 0, -1, 1};
+
+    for (int count = 0; count < total; count++) {
+
+        int u = -1;
+        for (int i = 0; i < total; i++) {
+
+            if (!visited[i] &&
+                (u == -1 || dist[i] < dist[u])) {
+
+                u = i;
+            }
+        }
+
+        visited[u] = 1;
+        if (u == total - 1)
+            return dist[u];
+
+        int r = u / cols;
+        int c = u % cols;
+        for (int d = 0; d < 4; d++) {
+
+            int nr = r + dr[d];
+            int nc = c + dc[d];
+            if (nr < 0 || nr >= rows ||
+                nc < 0 || nc >= cols)
+                continue;
+
+            int v = nr * cols + nc;
+            int difference =
+                abs(heights[r][c] - heights[nr][nc]);
+
+            int newEffort;
+
+            if (dist[u] > difference)
+                newEffort = dist[u];
+            else
+                newEffort = difference;
+            if (newEffort < dist[v])
+                dist[v] = newEffort;
+        }
+    }
+
+    return dist[total - 1];
+}
